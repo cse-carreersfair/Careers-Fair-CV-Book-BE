@@ -2,6 +2,13 @@ import os, glob
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+
+
+logger_format = "%(levelname)s:     %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=logger_format)
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -14,7 +21,7 @@ app.add_middleware(
 )
 
 def get_photo_path(index):
-    exts = ["jpg", "jpeg", "JPG", "JPEG"]
+    exts = ["jpg", "jpeg", "JPG", "JPEG","png"]
     for ext in exts:
         path1 = os.path.join("Photos", f"{index}.{ext}")
         if os.path.exists(path1):
@@ -23,6 +30,7 @@ def get_photo_path(index):
 
 def get_data_file_path():
     path = os.path.join("Json", "info-*.json")
+    
     files = glob.glob(path)
     files.sort(key=os.path.getmtime, reverse=True)
     if len(files) == 0:
@@ -31,7 +39,7 @@ def get_data_file_path():
 
 @app.get("/")
 def root():
-    return "Carriers Fair 2023 - CV Book Data API"
+    return "Carriers Day 2024 - CV Book Data API"
 
 @app.get("/data")
 def data():
